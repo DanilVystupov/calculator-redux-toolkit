@@ -15,11 +15,11 @@ button {
 }
 
 .display {
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  text-align: center;
+  word-wrap: break-word;
   margin-bottom: 30px;
   font-size: 30px;
+  width: 30%;
 }
 
 .keypad {

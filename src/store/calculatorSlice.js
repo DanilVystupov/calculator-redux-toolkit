@@ -46,34 +46,51 @@ const calculatorSlice = createSlice({
         selectOperation: (state, action) => {
             const operator = action.payload;
             const inputValue = parseFloat(state.displayValue);
-            if (state.value === null) {
-                state.value = inputValue;
-            } else if (state.operator) {
-                const currentValue = state.value || 0;
-                const newValue = eval(
-                    `${currentValue} ${state.operator} ${inputValue}`
-                );
-                state.value = newValue;
-                state.displayValue = String(newValue);
-            }
-            state.waitingForOperand = true;
+            performOperation(state, inputValue);
             state.operator = operator;
         },
         calculate: (state) => {
             if (state.operator && !state.waitingForOperand) {
                 const inputValue = parseFloat(state.displayValue);
-                const currentValue = state.value || 0;
-                const newValue = eval(
-                    `${currentValue} ${state.operator} ${inputValue}`
-                );
-                state.value = null;
-                state.displayValue = String(newValue);
+                performOperation(state, inputValue);
                 state.operator = null;
             }
             state.waitingForOperand = true;
-        }
+        },
     }
 });
+
+
+function performOperation(state, inputValue) {
+    const { value, operator } = state;
+
+    if (value === null) {
+        state.value = inputValue;
+    } else if (operator) {
+        const currentValue = value || 0;
+        const newValue = calculateResult(currentValue, operator, inputValue);
+        state.value = newValue;
+        state.displayValue = String(newValue);
+    }
+    state.waitingForOperand = true;
+}
+
+function calculateResult(value1, operator, value2) {
+    switch (operator) {
+        case "+":
+            return value1 + value2;
+        case "-":
+            return value1 - value2;
+        case "*":
+            return value1 * value2;
+        case "/":
+            return value1 / value2;
+        default:
+            return 0;
+    }
+}
+
+
 
 export const {
     inputDigit,
